@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import AppBar from "@mui/material/AppBar";
@@ -8,12 +9,28 @@ import Button from "@mui/material/Button";
 import LogoDevIcon from "@mui/icons-material/LogoDev";
 
 const Header = () => {
+	const navigate = useNavigate();
+
+	const handleClick = () => {
+		navigate("/");
+	};
+
 	return (
 		<AppBar position="static">
 			<Container maxWidth="xl" sx={{ bgcolor: "#DBDBDB" }}>
 				<Toolbar disableGutters>
 					<LogoDevIcon
-						sx={{ mr: 1, mt: 3, mb: 3, fontSize: 40, color: "#707070" }}
+						sx={{
+							mr: 1,
+							mt: 3,
+							mb: 3,
+							fontSize: 40,
+							color: "#707070",
+							"&:hover": {
+								cursor: "pointer",
+							},
+						}}
+						onClick={handleClick}
 					/>
 					<Typography variant="h6" color="#707070" sx={{ fontWeight: 600 }}>
 						永續報告書小工具

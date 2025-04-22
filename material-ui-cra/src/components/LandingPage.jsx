@@ -1,10 +1,17 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { Button } from "@mui/material";
 
 const LandingPage = () => {
+	const navigate = useNavigate();
+
+	const handleClick = () => {
+		navigate("/step-page");
+	};
+
 	return (
 		<Container
 			maxWidth="md"
@@ -61,6 +68,7 @@ const LandingPage = () => {
 					color="secondary"
 					sx={{ bgcolor: "#FAFAFA" }}
 					size="large"
+					onClick={handleClick}
 				>
 					使用！
 				</Button>
