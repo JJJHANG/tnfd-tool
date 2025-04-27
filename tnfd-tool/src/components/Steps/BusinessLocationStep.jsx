@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -10,19 +10,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import MapPage from "../Map/MapPage";
 
-const StepThree = () => {
-	const item = null;
-
-	function createData(name, calories, fat, carbs, protein) {
-		return { name, calories, fat, carbs, protein };
-	}
-
-	const rows = [
-		{ name: "中央研究院", coordinate: "25.045472, 121.614008" },
-		{ name: "中央研究院2", coordinate: "25.758472, 121.992008" },
-	];
-
+const BusinessLocationStep = ({ formData, setFormData }) => {
 	return (
 		<Box>
 			<Typography variant="h4" color="secondary">
@@ -30,7 +20,7 @@ const StepThree = () => {
 			</Typography>
 			<Stack sx={{ mt: 3 }}>
 				<Typography color="secondary">
-					- 匡選企業本身或上下游廠商的地理範圍
+					- 框選企業本身或上下游廠商的地理範圍
 				</Typography>
 			</Stack>
 			<Stack
@@ -42,8 +32,15 @@ const StepThree = () => {
 				}}
 			>
 				<Box>
-					<TableContainer component={Paper}>
-						<Table sx={{ minWidth: 350 }} aria-label="simple table">
+					<TableContainer
+						component={Paper}
+						sx={{ maxHeight: 400, overflow: "auto", maxWidth: 350 }}
+					>
+						<Table
+							stickyHeader
+							sx={{ minWidth: 350 }}
+							aria-label="simple table"
+						>
 							<TableHead>
 								<TableRow>
 									<TableCell>廠區名稱</TableCell>
@@ -51,7 +48,7 @@ const StepThree = () => {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{rows.map((row) => (
+								{Object.values(formData.location || {}).map((row) => (
 									<TableRow
 										key={row.name}
 										sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -59,7 +56,7 @@ const StepThree = () => {
 										<TableCell component="th" scope="row">
 											{row.name}
 										</TableCell>
-										<TableCell align="right">{row.coordinate}</TableCell>
+										<TableCell align="right">{row.points}</TableCell>
 									</TableRow>
 								))}
 							</TableBody>
@@ -67,15 +64,8 @@ const StepThree = () => {
 					</TableContainer>
 				</Box>
 
-				{item ? (
-					<img
-						src={item}
-						style={{
-							width: 800,
-							height: 400,
-						}}
-						alt="location"
-					/>
+				{<MapPage /> ? (
+					<MapPage setFormData={setFormData} />
 				) : (
 					<Skeleton variant="rectangular" width={800} height={400} />
 				)}
@@ -84,4 +74,4 @@ const StepThree = () => {
 	);
 };
 
-export default StepThree;
+export default BusinessLocationStep;

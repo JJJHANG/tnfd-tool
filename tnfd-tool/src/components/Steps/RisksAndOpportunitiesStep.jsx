@@ -25,7 +25,27 @@ const sectorList = [
 	"公共與政府部門",
 ];
 
-const StepFive = () => {
+const RisksAndOpportunitiesStep = ({ formData, setFormData }) => {
+	const handleIndustryChange = (event, newValue) => {
+		setFormData((prev) => ({
+			...prev,
+			risksAndOpportunities: {
+				...prev.risksAndOpportunities,
+				industry: newValue || "",
+			},
+		}));
+	};
+
+	const handleSectorChange = (event, newValue) => {
+		setFormData((prev) => ({
+			...prev,
+			risksAndOpportunities: {
+				...prev.risksAndOpportunities,
+				sector: newValue || "",
+			},
+		}));
+	};
+
 	return (
 		<Box>
 			<Typography variant="h4" color="secondary">
@@ -36,12 +56,16 @@ const StepFive = () => {
 				<Autocomplete
 					disablePortal
 					options={industryList}
+					value={formData.risksAndOpportunities?.industry || ""}
+					onChange={handleIndustryChange}
 					sx={{ width: 300, m: 1 }}
 					renderInput={(params) => <TextField {...params} label="產業類別" />}
 				/>
 				<Autocomplete
 					disablePortal
 					options={sectorList}
+					value={formData.risksAndOpportunities?.sector || ""}
+					onChange={handleSectorChange}
 					sx={{ width: 300, m: 1 }}
 					renderInput={(params) => <TextField {...params} label="部門" />}
 				/>
@@ -50,4 +74,4 @@ const StepFive = () => {
 	);
 };
 
-export default StepFive;
+export default RisksAndOpportunitiesStep;

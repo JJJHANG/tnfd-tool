@@ -5,19 +5,33 @@ import Box from "@mui/material/Box";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import FormControl from "@mui/material/FormControl";
 
-const StepSix = () => {
+const GovernanceStructureStep = ({ formData, setFormData }) => {
+	const handleChange = (event) => {
+		const { value } = event.target;
+		setFormData((prev) => ({
+			...prev,
+			governance: {
+				...prev.governance,
+				description: value,
+			},
+		}));
+	};
+
 	return (
 		<Box>
 			<Typography variant="h4" color="secondary">
-				進行影響評估並提出減少影響的策略、措施與對應指標
+				確認企業主要的治理結構
 			</Typography>
 			<Stack sx={{ mt: 3 }}>
 				<Typography color="secondary">
 					-
-					描述為減少對生物多樣性的負面影響而採取的措施/策略類型和已取得/預計取得的成效
+					包括董事會成員、管理層和主要委員會，並說明其中是否有具備自然相關議題能力的成員
 				</Typography>
 				<Typography color="secondary">
-					- 設定可衡量措施進展的量化指標
+					- 描述企業與永續發展和自然資源管理相關的治理方案
+				</Typography>
+				<Typography color="secondary">
+					- 說明治理層在自然資源和永續發展方面的責任和義務
 				</Typography>
 			</Stack>
 			<FormControl fullWidth sx={{ height: "100%", mt: 1 }} color="secondary">
@@ -25,6 +39,8 @@ const StepSix = () => {
 					multiline
 					minRows="12"
 					id="outlined-adornment-amount"
+					value={formData.governance.description || ""} 
+					onChange={handleChange}
 					sx={{ height: "100%", alignItems: "start" }}
 				/>
 			</FormControl>
@@ -32,4 +48,4 @@ const StepSix = () => {
 	);
 };
 
-export default StepSix;
+export default GovernanceStructureStep;

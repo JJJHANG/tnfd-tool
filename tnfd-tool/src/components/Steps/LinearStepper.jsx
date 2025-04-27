@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import StepOne from "./StepOne";
-import StepThree from "./StepThree";
-import StepFour from "./StepFour";
-import StepFive from "./StepFive";
-import StepSix from "./StepSix";
+import GovernanceStructureStep from "./GovernanceStructureStep";
+import BusinessActivitiesStep from "./BusinessActivitiesStep";
+import BusinessLocationStep from "./BusinessLocationStep";
+import BiodiversityDataCollectionStep from "./BiodiversityDataCollectionStep";
+import StakeholderIdentificationStep from "./StakeholderIdentificationStep";
+import RisksAndOpportunitiesStep from "./RisksAndOpportunitiesStep";
+import ImpactMitigationStrategiesStep from "./ImpactMitigationStrategiesStep";
 
 const steps = [
 	"第一步",
@@ -21,29 +23,75 @@ const steps = [
 	"第七步",
 ];
 
-const getStepContent = (step) => {
-	switch (step) {
-		case 0:
-			return <StepOne />;
-		case 2:
-			return <StepThree />;
-		case 3:
-			return <StepFour />;
-		case 4:
-			return <StepFive />;
-		case 6:
-			return <StepSix />;
-		default:
-			return <div>尚未設定的步驟內容</div>;
-	}
-};
-
 const LinearStepper = () => {
-	const [activeStep, setActiveStep] = React.useState(0);
-	const [skipped, setSkipped] = React.useState(new Set());
+	const [activeStep, setActiveStep] = useState(0);
+	const [skipped, setSkipped] = useState(new Set());
+	const optionalSteps = [0, 1, 2, 3, 4, 5, 6];
+	const [formData, setFormData] = useState({
+		governance: {},
+		activities: {},
+		location: {},
+		biodiversity: {},
+		stakeholders: {},
+		risksAndOpportunities: {},
+		mitigationStrategies: {},
+	});
+
+	const getStepContent = (step) => {
+		switch (step) {
+			case 0:
+				return (
+					<GovernanceStructureStep
+						formData={formData}
+						setFormData={setFormData}
+					/>
+				);
+			case 1:
+				return (
+					<BusinessActivitiesStep
+						formData={formData}
+						setFormData={setFormData}
+					/>
+				);
+			case 2:
+				return (
+					<BusinessLocationStep formData={formData} setFormData={setFormData} />
+				);
+			case 3:
+				return (
+					<BiodiversityDataCollectionStep
+						formData={formData}
+						setFormData={setFormData}
+					/>
+				);
+			case 4:
+				return (
+					<StakeholderIdentificationStep
+						formData={formData}
+						setFormData={setFormData}
+					/>
+				);
+			case 5:
+				return (
+					<RisksAndOpportunitiesStep
+						formData={formData}
+						setFormData={setFormData}
+					/>
+				);
+			case 6:
+				return (
+					<ImpactMitigationStrategiesStep
+						formData={formData}
+						setFormData={setFormData}
+					/>
+				);
+			default:
+				return <div>尚未設定的步驟內容</div>;
+		}
+	};
 
 	const isStepOptional = (step) => {
-		return step === 1;
+		return optionalSteps.includes(step);
 	};
 
 	const isStepSkipped = (step) => {
@@ -90,13 +138,6 @@ const LinearStepper = () => {
 				{steps.map((label, index) => {
 					const stepProps = {};
 					const labelProps = {};
-					// if (isStepOptional(index)) {
-					// 	labelProps.optional = (
-					// 		<Typography variant="caption" color="secondary">
-					// 			＊選填
-					// 		</Typography>
-					// 	);
-					// }
 					if (isStepSkipped(index)) {
 						stepProps.completed = false;
 					}
