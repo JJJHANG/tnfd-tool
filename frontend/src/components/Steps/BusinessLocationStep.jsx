@@ -11,6 +11,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import MapPage from "../Map/MapPage";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import InfoIcon from "@mui/icons-material/Info";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const BusinessLocationStep = ({ formData, setFormData }) => {
 	return (
@@ -34,7 +38,7 @@ const BusinessLocationStep = ({ formData, setFormData }) => {
 				<Box>
 					<TableContainer
 						component={Paper}
-						sx={{ maxHeight: 400, overflow: "auto", maxWidth: 350 }}
+						sx={{ maxHeight: 400, maxWidth: 350, overflowY: "auto" }}
 					>
 						<Table
 							stickyHeader
@@ -43,20 +47,39 @@ const BusinessLocationStep = ({ formData, setFormData }) => {
 						>
 							<TableHead>
 								<TableRow>
-									<TableCell>廠區名稱</TableCell>
-									<TableCell align="right">廠區點位</TableCell>
+									<TableCell sx={{ minWidth: 100, width: "70%" }}>
+										廠區名稱
+									</TableCell>
+									<TableCell align="right" sx={{ width: "30%" }}>
+										操作
+									</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
 								{Object.values(formData.location || {}).map((row) => (
-									<TableRow
-										key={row.name}
-										sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-									>
-										<TableCell component="th" scope="row">
-											{row.name}
+									<TableRow key={row.name}>
+										<TableCell component="th" scope="row" sx={{ width: "70%" }}>
+											<Box display="flex" alignItems="center">
+												<span>{row.name}</span>
+												<Tooltip
+													title={row.points}
+													arrow
+													placement="top"
+													color="primary"
+												>
+													<IconButton size="small">
+														<InfoIcon fontSize="small" color="primary" />
+													</IconButton>
+												</Tooltip>
+											</Box>
 										</TableCell>
-										<TableCell align="right">{row.points}</TableCell>
+										<TableCell align="right" sx={{ width: "30%" }}>
+											<Tooltip title="刪除此廠區" arrow placement="top">
+												<IconButton size="small">
+													<DeleteIcon fontSize="small" />
+												</IconButton>
+											</Tooltip>
+										</TableCell>
 									</TableRow>
 								))}
 							</TableBody>
