@@ -151,11 +151,46 @@ const LinearStepper = () => {
 			{activeStep === steps.length ? (
 				<React.Fragment>
 					<Typography sx={{ mt: 2, mb: 1 }}>
-						All steps completed - you&apos;re finished
+						所有步驟完成！請預覽並下載報告：
 					</Typography>
-					<Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-						<Box sx={{ flex: "1 1 auto" }} />
-						<Button onClick={handleReset}>Reset</Button>
+					<Box
+						id="pdf-content"
+						sx={{
+							p: 4,
+							backgroundColor: "#fff",
+							border: "1px solid #ccc",
+							mt: 4,
+						}}
+					>
+						<Typography variant="h5" gutterBottom>
+							使用者填寫報告
+						</Typography>
+
+						<Typography variant="h6">📌 治理架構</Typography>
+						<pre>{JSON.stringify(formData.governance, null, 2)}</pre>
+
+						<Typography variant="h6">🏭 商業活動</Typography>
+						<pre>{JSON.stringify(formData.activities, null, 2)}</pre>
+
+						<Typography variant="h6">📍 商業地點</Typography>
+						{Object.values(formData.location || {}).map((loc) => (
+							<Box key={loc.name} sx={{ mb: 1 }}>
+								<Typography>● 廠區名稱：{loc.name}</Typography>
+								<Typography variant="body2">　點位：{loc.points}</Typography>
+							</Box>
+						))}
+
+						<Typography variant="h6">🌱 生物多樣性</Typography>
+						<pre>{JSON.stringify(formData.biodiversity, null, 2)}</pre>
+
+						<Typography variant="h6">👥 利害關係人</Typography>
+						<pre>{JSON.stringify(formData.stakeholders, null, 2)}</pre>
+
+						<Typography variant="h6">⚠️ 風險與機會</Typography>
+						<pre>{JSON.stringify(formData.risksAndOpportunities, null, 2)}</pre>
+
+						<Typography variant="h6">🛠️ 緩解策略</Typography>
+						<pre>{JSON.stringify(formData.mitigationStrategies, null, 2)}</pre>
 					</Box>
 				</React.Fragment>
 			) : (
