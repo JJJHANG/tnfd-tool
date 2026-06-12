@@ -21,9 +21,16 @@ const getCookie = (name) => {
     return "";
 };
 
-export const ensureCsrfToken = async (apiBaseUrl = getApiBaseUrl()) => {
+export const clearCsrfToken = () => {
+    csrfToken = "";
+};
+
+export const ensureCsrfToken = async (
+    apiBaseUrl = getApiBaseUrl(),
+    { force = false } = {},
+) => {
     const existingToken = csrfToken || getCookie(CSRF_COOKIE_NAME);
-    if (existingToken) {
+    if (!force && existingToken) {
         return existingToken;
     }
 
@@ -39,18 +46,30 @@ export const ensureCsrfToken = async (apiBaseUrl = getApiBaseUrl()) => {
 export const csrfFetch = async (url, options = {}) => {
     const method = (options.method || "GET").toUpperCase();
     const shouldAddCsrf = !["GET", "HEAD", "OPTIONS", "TRACE"].includes(method);
+    const hasProvidedToken = new Headers(options.headers || {}).has("X-CSRFToken");
 
-    const headers = new Headers(options.headers || {});
-    if (shouldAddCsrf && !headers.has("X-CSRFToken")) {
-        const token = await ensureCsrfToken();
-        if (token) {
-            headers.set("X-CSRFToken", token);
+    const buildRequestOptions = async ({ forceToken = false } = {}) => {
+        const headers = new Headers(options.headers || {});
+        if (shouldAddCsrf && !headers.has("X-CSRFToken")) {
+            const token = await ensureCsrfToken(getApiBaseUrl(), {
+                force: forceToken,
+            });
+            if (token) {
+                headers.set("X-CSRFToken", token);
+            }
         }
-    }
 
-    return fetch(url, {
-        ...options,
-        headers,
-        credentials: options.credentials || "include",
-    });
+        return {
+            ...options,
+            headers,
+            credentials: options.credentials || "include",
+        };
+    };
+
+    const response = await fetch(url, await buildRequestOptions());
+    if (shouldAddCsrf && !hasProvidedToken && response.status === 403) {
+        clearCsrfToken();
+        return fetch(url, await buildRequestOptions({ forceToken: true }));
+    }
+    return response;
 };

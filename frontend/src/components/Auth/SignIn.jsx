@@ -8,7 +8,12 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import useAuthContext from "../../hooks/use-auth-context";
-import { csrfFetch, getApiBaseUrl } from "../../utils/api";
+import {
+	clearCsrfToken,
+	csrfFetch,
+	ensureCsrfToken,
+	getApiBaseUrl,
+} from "../../utils/api";
 
 const SignIn = () => {
 	const apiBaseUrl = getApiBaseUrl();
@@ -38,6 +43,8 @@ const SignIn = () => {
 				throw new Error(data.error || "登入失敗，請確認帳號與密碼。");
 			}
 
+			clearCsrfToken();
+			await ensureCsrfToken(apiBaseUrl, { force: true });
 			signIn(data.user);
 			navigate("/");
 		} catch (err) {
