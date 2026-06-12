@@ -13,13 +13,64 @@ function AuthProvider({ children }) {
 		}
 		return storedSignIn === "true"; // 有記錄才轉成 true/false
 	});
+	const [user, setUser] = useState(() => {
+		const storedUser = sessionStorage.getItem("user");
+		if (!storedUser) {
+			return null;
+		}
+
+		try {
+			return JSON.parse(storedUser);
+		} catch {
+			return null;
+		}
+	});
 
 	useEffect(() => {
 		// 登入狀態改變時，寫回 sessionStorage
 		sessionStorage.setItem("isSignIn", isSignIn);
 	}, [isSignIn]);
 
-	const shareContent = { isSignIn, setIsSignIn };
+	useEffect(() => {
+		if (user) {
+			sessionStorage.setItem("user", JSON.stringify(user));
+		} else {
+			sessionStorage.removeItem("user");
+		}
+	}, [user]);
+
+	const signIn = (nextUser) => {
+		setUser(nextUser);
+		setIsSignIn(true);
+	};
+
+	const signOut = () => {
+		setUser(null);
+		setIsSignIn(false);
+	};
+
+	const decrementToken = () => {
+		setUser((currentUser) => {
+			if (!currentUser || currentUser.is_staff || currentUser.is_superuser) {
+				return currentUser;
+			}
+
+			return {
+				...currentUser,
+				total_tokens: Number(currentUser.total_tokens || 0) - 1,
+			};
+		});
+	};
+
+	const shareContent = {
+		isSignIn,
+		setIsSignIn,
+		user,
+		setUser,
+		signIn,
+		signOut,
+		decrementToken,
+	};
 
 	return (
 		<AuthContext.Provider value={shareContent}>{children}</AuthContext.Provider>

@@ -8,6 +8,8 @@ import StepPage from "./components/Pages/StepPage";
 import SignIn from "./components/Auth/SignIn";
 import SignUp from "./components/Auth/SignUp";
 import ContactUs from "./components/ContactUs";
+import StrategyRunDetailPage from "./components/Pages/StrategyRunDetailPage";
+import StrategyRunHistoryPage from "./components/Pages/StrategyRunHistoryPage";
 
 export default function App() {
 	return (
@@ -28,6 +30,11 @@ export default function App() {
 						<Route path="/sign-in" element={<SignIn />} />
 						<Route path="/sign-up" element={<SignUp />} />
 						<Route path="/contact-us" element={<ContactUs />} />
+						<Route path="/strategy-history" element={<StrategyRunHistoryPage />} />
+						<Route
+							path="/strategy-history/:runId"
+							element={<StrategyRunDetailPage />}
+						/>
 					</Routes>
 				</Box>
 

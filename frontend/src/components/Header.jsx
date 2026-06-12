@@ -11,9 +11,11 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
 import useAuthContext from "../hooks/use-auth-context";
+import { csrfFetch, getApiBaseUrl } from "../utils/api";
 
 const Header = () => {
-	const { isSignIn, setIsSignIn } = useAuthContext();
+	const apiBaseUrl = getApiBaseUrl();
+	const { isSignIn, user, signOut } = useAuthContext();
 	const navigate = useNavigate();
 	const [anchorElUser, setAnchorElUser] = useState(null); // 控制 Menu 開關
 
@@ -38,7 +40,7 @@ const Header = () => {
 		setAnchorElUser(null);
 	};
 
-	const settings = ["個人資料", "設定", "登出"];
+	const settings = ["個人資料", "設定", "歷史紀錄", "登出"];
 
 	return (
 		<AppBar position="static">
@@ -76,6 +78,19 @@ const Header = () => {
 						>
 							聯絡我們
 						</Button>
+						{isSignIn && (
+							<Typography
+								variant="button"
+								color="secondary"
+								sx={{
+									display: "flex",
+									alignItems: "center",
+									whiteSpace: "nowrap",
+								}}
+							>
+								Token: {user?.total_tokens ?? "-"}
+							</Typography>
+						)}
 						<Button
 							variant="outlined"
 							color="secondary"
@@ -83,7 +98,7 @@ const Header = () => {
 							size="large"
 							onClick={handleSignInClick}
 						>
-							{isSignIn ? "思路飛" : "登入"}
+							{isSignIn ? user?.name || user?.email || "帳號" : "登入"}
 						</Button>
 						<Menu
 							sx={{ mt: "45px" }}
@@ -106,8 +121,14 @@ const Header = () => {
 									key={setting}
 									onClick={() => {
 										handleCloseUserMenu();
+										if (setting === "歷史紀錄") {
+											navigate("/strategy-history");
+										}
 										if (setting === "登出") {
-											setIsSignIn(false);
+											csrfFetch(`${apiBaseUrl}/api/occurrence/logout/`, {
+												method: "POST",
+											}).catch(() => {});
+											signOut();
 											navigate("/");
 										}
 									}}

@@ -19,21 +19,33 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 const LandingPage = () => {
 	const navigate = useNavigate();
-	const { isSignIn } = useAuthContext();
+	const { isSignIn, user } = useAuthContext();
 	const [dialogOpen, setDialogOpen] = useState(false);
+	const [dialogMessage, setDialogMessage] = useState("");
 
 	const handleDialogClose = () => {
 		setDialogOpen(false);
 	};
 
 	const handleClick = () => {
-		if (isSignIn) {
-			// 登入時轉跳到功能頁面
-			navigate("/step-page");
-		} else {
+		if (!isSignIn) {
 			// 未登入時彈出提醒視窗
+			setDialogMessage(
+				"您尚未登入，請點擊右上角的「登入」按鈕進行登入。如尚未註冊，請於登入頁面點選「申請帳號」完成註冊後即可登入使用。",
+			);
 			setDialogOpen(true);
+			return;
 		}
+
+		const isTokenExemptUser = user?.is_staff || user?.is_superuser;
+		if (!isTokenExemptUser && Number(user?.total_tokens || 0) <= 0) {
+			setDialogMessage("您的 token 不足，請聯絡管理員補充 token 後再使用。");
+			setDialogOpen(true);
+			return;
+		}
+
+		// 登入且 token 足夠時轉跳到功能頁面
+		navigate("/step-page");
 	};
 
 	return (
@@ -111,7 +123,7 @@ const LandingPage = () => {
 				<DialogTitle>{"提醒"}</DialogTitle>
 				<DialogContent>
 					<DialogContentText id="alert-dialog-slide-description">
-						您尚未登入，請點擊右上角的「登入」按鈕進行登入。如尚未註冊，請於登入頁面點選「申請帳號」完成註冊後即可登入使用。
+						{dialogMessage}
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions>
