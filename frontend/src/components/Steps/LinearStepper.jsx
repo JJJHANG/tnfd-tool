@@ -16,6 +16,7 @@ import BusinessActivitiesStep from "./BusinessActivitiesStep";
 import BusinessLocationStep from "./BusinessLocationStep";
 import BiodiversityDataCollectionStep from "./BiodiversityDataCollectionStep";
 import StakeholderIdentificationStep from "./StakeholderIdentificationStep";
+import RisksAndOpportunitiesStep from "./RisksAndOpportunitiesStep";
 import industryNatureAppendix from "../../data/industryNatureAppendix.json";
 import useAuthContext from "../../hooks/use-auth-context";
 import { csrfFetch, getApiBaseUrl } from "../../utils/api";
@@ -38,6 +39,7 @@ const steps = [
     "第三步",
     "第四步",
     "第五步",
+    "第六步",
 ];
 
 const actionCardSx = {
@@ -350,7 +352,7 @@ const LinearStepper = () => {
     const [tnfdSiteEvidenceByName, setTnfdSiteEvidenceByName] = useState({});
     const [strategyLoading, setStrategyLoading] = useState(false);
     const [strategyError, setStrategyError] = useState("");
-    const optionalSteps = [0, 1, 2, 3, 4];
+    const optionalSteps = [0, 1, 2, 3, 4, 5];
     const [formData, setFormData] = useState({
         governance: {},
         activities: {},
@@ -393,6 +395,13 @@ const LinearStepper = () => {
             case 4:
                 return (
                     <StakeholderIdentificationStep
+                        formData={formData}
+                        setFormData={setFormData}
+                    />
+                );
+            case 5:
+                return (
+                    <RisksAndOpportunitiesStep
                         formData={formData}
                         setFormData={setFormData}
                     />
